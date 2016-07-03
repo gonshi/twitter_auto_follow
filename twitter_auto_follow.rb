@@ -8,8 +8,15 @@ twitter_client = Twitter::REST::Client.new do |config|
   config.access_token_secret = ENV['GET_FOLLOWER_TWITTER_ACCESS_TOKEN_SECRET']
 end
 
-followers = twitter_client.followers(ARGV[0])
+QUERY = "スロット"
+result_tweets = twitter_client.search(
+    QUERY,
+    count: 15,
+    result_type: "recent",
+    exclude: "retweets",
+    since_id: nil
+  )
 
-followers.take(15).each_with_index do |follower, i|
-  twitter_client.follow(follower.id)
+result_tweets.take(15).each_with_index do |tweet, i|
+  twitter_client.follow(tweet.user.id)
 end
